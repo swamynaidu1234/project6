@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { getCat, getSubCat } from "../services/cat_subcat_service";
 import { Link } from "raviger";
 export default function Header() {
@@ -37,7 +37,7 @@ export default function Header() {
       <a href="#">Link 3</a>
     </div>
   </div>  */}
-        {catItems.map((catelement: any, index) => {
+        {catItems.map((catelement: any) => {
           return (
             <>
               {/* <a key={index}></a> */}
@@ -47,10 +47,10 @@ export default function Header() {
                   <i className="fa fa-caret-down"></i>
                 </button>
                 <div className="dropdown-content">
-                  {subCatItems.map((subcatelement:{subCatName:string,catId:string},index)=>{
+                  {subCatItems.map((subcatelement:{_id:string,subCatName:string,catId:string})=>{
                     if(subcatelement.catId === catelement._id)
                     return <>
-                    <Link href="./products" key="index">{subcatelement.subCatName}</Link>
+                    <Link href={`/products?subCatId=${encodeURIComponent(subcatelement._id)}`} key={subcatelement._id}>{subcatelement.subCatName}</Link>
                     </>
                   })}
                   
