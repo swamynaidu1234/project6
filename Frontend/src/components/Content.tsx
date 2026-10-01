@@ -9,9 +9,6 @@ export default function abc() {
   
   return (
     <div>
-      Content - {x}
-      <Button btnType="medium" text="Click Me" clickEvent={displayData}/>
-      <input type='button' value="Increase" onClick={()=>updateX(200)} />
       
     </div>
   )
