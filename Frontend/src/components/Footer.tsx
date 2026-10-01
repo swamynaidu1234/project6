@@ -22,27 +22,7 @@ export default function Footer() {
             <h3 className="text-2xl font-semibold text-white mb-2">Subscribe to Our Newsletter</h3>
             <p className="text-sm text-gray-400">Get exclusive deals, latest products, and shopping tips delivered to your inbox</p>
           </div>
-          <form className="flex flex-col sm:flex-row gap-3 flex-1 min-w-fit relative" onSubmit={handleNewsletterSignup}>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 px-4 py-3 rounded bg-white/5 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all"
-              required
-            />
-            <button 
-              type="submit"
-              className="px-7 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded font-semibold whitespace-nowrap hover:from-red-500 hover:to-red-600 hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-lg hover:shadow-red-600/30"
-            >
-              Subscribe
-            </button>
-            {subscribed && (
-              <span className="absolute bottom-full right-0 mb-2 text-green-500 text-xs font-medium animate-pulse">
-                ✓ Thank you for subscribing!
-              </span>
-            )}
-          </form>
+         
         </div>
       </div>
 
@@ -125,7 +105,7 @@ export default function Footer() {
       </div>
 
       {/* Payment Methods & Bottom Info */}
-      <div className="bg-black/20 px-5 py-8 border-t border-white/10">
+      {/* <div className="bg-black/20 px-5 py-8 border-t border-white/10">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-5 flex-wrap">
           <div className="flex items-center gap-4 flex-wrap justify-center md:justify-start">
             <span className="text-xs font-semibold text-white uppercase tracking-wide">We Accept:</span>
@@ -144,7 +124,7 @@ export default function Footer() {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
     </footer>
   )
 }
