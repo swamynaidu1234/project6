@@ -8,10 +8,32 @@ type Product = {
   color: string;
   price: number;
   qty: number;
+  cartQuantity?: number;
   [key: string]: unknown;
 };
 
 type ViewMode = "grid" | "list";
+
+const getProductKey = (product: Product) =>
+  String(product.id ?? product.productId ?? `${product.pname ?? product.name}-${product.color}-${product.price}`);
+
+const readCart = (): Product[] => {
+  try {
+    const savedCart = JSON.parse(localStorage.getItem("cart") ?? "[]") as Product[];
+    return savedCart.reduce<Product[]>((items, product) => {
+      const existing = items.find((item) => getProductKey(item) === getProductKey(product));
+      const quantity = product.cartQuantity ?? 1;
+      if (existing) {
+        existing.cartQuantity = (existing.cartQuantity ?? 1) + quantity;
+      } else {
+        items.push({ ...product, cartQuantity: quantity });
+      }
+      return items;
+    }, []);
+  } catch {
+    return [];
+  }
+};
 
 export default function Products() {
   const [queryParams] = useQueryParams((query) =>
@@ -22,14 +44,13 @@ export default function Products() {
   const [loading, setLoading] = useState(Boolean(subCatId));
   const [error, setError] = useState("");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
-  const [cartCount, setCartCount] = useState(() => {
-    try {
-      const savedCart: Product[] = JSON.parse(localStorage.getItem("cart") ?? "[]");
-      return savedCart.length;
-    } catch {
-      return 0;
-    }
-  });
+  const [cartItems, setCartItems] = useState<Product[]>(readCart);
+  const cartCount = cartItems.reduce((count, item) => count + (item.cartQuantity ?? 1), 0);
+
+  const saveCart = (items: Product[]) => {
+    setCartItems(items);
+    localStorage.setItem("cart", JSON.stringify(items));
+  };
 
   useEffect(() => {
     if (!subCatId) {
@@ -51,15 +72,15 @@ export default function Products() {
   };
 
   const addToCart = (product: Product) => {
-    try {
-      const savedCart: Product[] = JSON.parse(localStorage.getItem("cart") ?? "[]");
-      const updatedCart = [...savedCart, product];
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      setCartCount(updatedCart.length);
-    } catch {
-      localStorage.setItem("cart", JSON.stringify([product]));
-      setCartCount(1);
-    }
+    const existing = cartItems.find((item) => getProductKey(item) === getProductKey(product));
+    const updatedCart = existing
+      ? cartItems.map((item) =>
+          getProductKey(item) === getProductKey(product)
+            ? { ...item, cartQuantity: (item.cartQuantity ?? 1) + 1 }
+            : item,
+        )
+      : [...cartItems, { ...product, cartQuantity: 1 }];
+    saveCart(updatedCart);
 
     viewDetails(product);
   };
@@ -91,9 +112,13 @@ export default function Products() {
               </button>
             ))}
           </div>
-          <div className="rounded-md bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-900" aria-live="polite">
-            Cart <span className="ml-1 tabular-nums">{cartCount}</span>
-          </div>
+          <button
+            type="button"
+            onClick={() => navigate("/cart")}
+            className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700"
+          >
+            Cart <span className="ml-1 tabular-nums" aria-live="polite">{cartCount}</span>
+          </button>
         </div>
       </div>
 
