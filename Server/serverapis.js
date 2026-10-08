@@ -51,3 +51,16 @@ app.get("/serGetProductsBySubCatId", function(req, res) {
         res.send(result);
     });
 });// Server File
+
+
+app.get("/serGetProductsByType", function(req, res) {
+    const type = req.query.type;
+    console.log(type);
+    conn.tbl_products.find({ type: type }, function(err, result) {
+        console.log(result);
+        if (err) {
+            return res.send(err);
+        }
+        res.send(result);
+    });
+});// Server File
